@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Handle Front Controller...
+
+RewriteCond %{REQUEST_URI} !(\.css|\.mp4|\.ico|\.js|\.png|\.woff2|\.woff|\.ttf|\.jpg|\.gif|\.svg|\.json|robots\.txt)$ [NC]
+
+RewriteRule ^ server.php [L]
+
+
+RewriteRule ^(.*)$ public/$1 [L,NC]
