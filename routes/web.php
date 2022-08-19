@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\MainController::class,'main'])->name('sri');
+Route::get('/', [\App\Http\Controllers\MainController::class,'main'])->name('main');
+Route::get('/sync', [\App\Http\Controllers\MainController::class,'syncPage'])->name('sri');
 Route::get('/data', [\App\Http\Controllers\MainController::class,'data'])->name('data');
 Route::post('/sri_sync', [\App\Http\Controllers\MainController::class,'sync'])->name('sri_sync');

@@ -103,6 +103,7 @@ class SriSyncJob implements ShouldQueue
                                 $header = array_map("strtolower", $datos);
                             } else {
                                 $datos = array_combine($header, $datos);
+                                //$actividadComercial = $datos[18];
                                 Ruc::create($datos);
                             }
                         }

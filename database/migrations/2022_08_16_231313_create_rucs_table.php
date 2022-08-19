@@ -34,6 +34,7 @@ return new class extends Migration
             $table->string("descripcion_parroquia");
             $table->string("codigo_ciiu");
             $table->text("actividad_economica");
+            $table->boolean("sistemas")->default(false);
             $table->timestamps();
         });
     }
