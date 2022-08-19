@@ -27,8 +27,13 @@ class SriSyncJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($syncId)
+    public function __construct($syncId = null)
     {
+        if ($syncId == null) {
+            $sync = Sync::create([]);
+            $syncId = $sync->id;
+        }
+
         $this->syncId = $syncId;
     }
 
@@ -61,10 +66,10 @@ class SriSyncJob implements ShouldQueue
         /*mediante una expresión regular se obtiene los links de descarga que contienen el csv con los datos de los rucs
         organizados por provincias*/
         preg_match_all('/https:\/\/www.sri.gob.ec\/o\/sri-portlet-biblioteca-alfresco-internet(.*)zip/', $body, $links);
-        $links=$links[0];
+        $links = $links[0];
         //ser verifica que se haya encontrado el número de archivos necesarios
         if (count($links) < 24) {
-            $sync->msg = "Se encontraron ".count($links)." provincias. ";
+            $sync->msg = "Se encontraron " . count($links) . " provincias. ";
             $sync->status = SyncStatus::$ERROR;
             $sync->save();
             return;
@@ -82,21 +87,21 @@ class SriSyncJob implements ShouldQueue
             $sync->msg = "Descargando " . $filename;
             $sync->percent += $percentByFile;
             $sync->save();
-            if(!Storage::exists('sri'))
+            if (!Storage::exists('sri'))
                 Storage::makeDirectory('sri');
             try {
                 //descarga el archivo zip
                 $client->request('GET', $link, [
-                    'sink' => Storage::path('sri/'.$filename.'.zip')
+                    'sink' => Storage::path('sri/' . $filename . '.zip')
                 ]);
                 $sync->msg = "Almacenando datos: " . $filename;
                 //abre el archivo zip para obtener los datos del csv
-                if (($gestor = fopen('zip://' . Storage::path('sri/'.$filename.'.zip') . '#'.$filename.'.txt', "r")) !== FALSE) {
+                if (($gestor = fopen('zip://' . Storage::path('sri/' . $filename . '.zip') . '#' . $filename . '.txt', "r")) !== FALSE) {
                     $init = true;
                     $header = [];
                     //almacena los rucs
                     while (($datos = fgetcsv($gestor, 1000, "\t")) !== FALSE) {
-                        if(count($datos)>1){
+                        if (count($datos) > 1) {
                             $datos = array_map('utf8_encode', $datos);
                             if ($init) {
                                 $init = false;
